@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-use-before-define */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-unused-vars */
@@ -9,22 +10,26 @@ const docClient = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
 exports.lambdaHandler = async (event, context) => {
   let body;
 
-  switch (event.httpMethod) {
-    case 'GET':
-      body = await getItem();
-      break;
-    case 'POST':
-      body = await createItem();
-      break;
-    case 'PUT':
-      body = await updateItem();
-      break;
-    case 'DELETE':
-      body = await deleteItem();
-      break;
-    default:
-      body = 'unexpected method';
-      break;
+  if (event.path === '/categoria') {
+    body = await getByCategoria();
+  } else {
+    switch (event.httpMethod) {
+      case 'GET':
+        body = await getItem();
+        break;
+      case 'POST':
+        body = await createItem();
+        break;
+      case 'PUT':
+        body = await updateItem();
+        break;
+      case 'DELETE':
+        body = await deleteItem();
+        break;
+      default:
+        body = 'unexpected method';
+        break;
+    }
   }
 
   const response = {
@@ -49,6 +54,32 @@ async function getItem() {
     console.log(err);
     body = err;
   }
+  return body;
+}
+
+async function getByCategoria() {
+  const params = {
+    TableName: 'PrimeiraTabela',
+    IndexName: 'categoria-index',
+    FilterExpression: 'nome = :nome',
+    KeyConditionExpression: '#categoria = :categoria',
+    ExpressionAttributeNames: {
+      '#categoria': 'categoria',
+    },
+    ExpressionAttributeValues: {
+      ':categoria': 1,
+      ':nome': 'Maria Dominga',
+    },
+  };
+  let body;
+  try {
+    const data = await docClient.query(params).promise();
+    body = data.Items;
+  } catch (err) {
+    console.log(err);
+    body = err;
+  }
+
   return body;
 }
 
