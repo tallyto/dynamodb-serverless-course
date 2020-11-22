@@ -42,6 +42,11 @@ Resources:
           Properties:
             Path: /categoria
             Method: get
+        CategoriaScan:
+          Type: Api 
+          Properties:
+            Path: /categoriaScan
+            Method: get
 
 Outputs:
   HelloWorldApi:

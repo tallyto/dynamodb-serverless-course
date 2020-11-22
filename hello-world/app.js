@@ -12,6 +12,8 @@ exports.lambdaHandler = async (event, context) => {
 
   if (event.path === '/categoria') {
     body = await getByCategoria();
+  } else if (event.path === '/categoriaScan') {
+    body = await getByCategoriaWithScan();
   } else {
     switch (event.httpMethod) {
       case 'GET':
@@ -54,6 +56,30 @@ async function getItem() {
     console.log(err);
     body = err;
   }
+  return body;
+}
+async function getByCategoriaWithScan() {
+  const params = {
+    TableName: 'PrimeiraTabela',
+    ProjectionExpression: 'id, nome',
+    FilterExpression: '#categoria = :categoria and contains (nome, :nome)',
+    ExpressionAttributeNames: {
+      '#categoria': 'categoria',
+    },
+    ExpressionAttributeValues: {
+      ':categoria': 1,
+      ':nome': 'Maria Dominga',
+    },
+  };
+  let body;
+  try {
+    const data = await docClient.scan(params).promise();
+    body = data.Items;
+  } catch (err) {
+    console.log(err);
+    body = err;
+  }
+
   return body;
 }
 
