@@ -1,0 +1,19 @@
+{
+  "name": "lambda-dynamo",
+  "version": "1.0.0",
+  "description": "This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.797.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
